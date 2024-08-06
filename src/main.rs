@@ -30,21 +30,22 @@ async fn main() {
 }
 
 #[get("/get_groups")]
-async fn get_groups(state: &State<AppState>) -> String {
+async fn get_groups(state: &State<AppState>) -> serde_json::Value {
     let client = state.redis_client.lock().await;
     let mut con = client.get_multiplexed_async_connection().await.unwrap();
     let groups: String = con.get("groups_map").await.unwrap();
-    groups.to_string()
+
+    serde_json::from_str(&groups).unwrap()
 }
 
 #[get("/get_timetable/<group>")]
-async fn get_timetable(state: &State<AppState>, group: &str) -> String {
+async fn get_timetable(state: &State<AppState>, group: &str) -> serde_json::Value {
 
     let client = state.redis_client.lock().await;
     let mut con = client.get_multiplexed_async_connection().await.unwrap();
     let groups: String = con.get("groups_map").await.unwrap();
 
     let groups_json = serde_json::from_str(&groups).unwrap();
-    
-    xlsx_parser::get_timetable(groups_json, group).to_string()
+
+    xlsx_parser::get_timetable(groups_json, group)
 }
