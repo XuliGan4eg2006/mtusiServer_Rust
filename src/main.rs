@@ -43,9 +43,9 @@ async fn get_timetable(state: &State<AppState>, group: &str) -> serde_json::Valu
 
     let client = state.redis_client.lock().await;
     let mut con = client.get_multiplexed_async_connection().await.unwrap();
-    let groups: String = con.get("groups_map").await.unwrap();
+    let groups: String = con.get(group).await.unwrap_or("{}".to_string());
 
     let groups_json = serde_json::from_str(&groups).unwrap();
 
-    xlsx_parser::get_timetable(groups_json, group)
+    groups_json
 }
