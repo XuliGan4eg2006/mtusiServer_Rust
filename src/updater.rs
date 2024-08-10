@@ -6,7 +6,7 @@ const XLSX_PATH: &str = "D:\\Desktop_unz\\projects\\mtusiServer\\src\\test.xlsx"
 
 pub fn update() {
 
-    let client = redis::Client::open("redis://default:gGoRyUmsYKRj4G9GKPx80ofuE9ZiftM8@redis-10734.c81.us-east-1-2.ec2.redns.redis-cloud.com:10734").unwrap();
+    let client = redis::Client::open("redis://192.168.0.112:8002").unwrap();
     let mut con = client.get_connection().unwrap();
 
     let group_map = xlsx_parser::get_groups_map();
